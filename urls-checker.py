@@ -2,8 +2,10 @@
 """
 urls-checker: URL health checker with retries and streaming output.
 
+Requires Python 3.13.
+
 Usage:
-    url-checker \
+    urls-checker \
         --urls-file FILE
         --timeout SECONDS
         --retries COUNT
@@ -45,7 +47,7 @@ def comma_separated_status_codes(value: str) -> set[int]:
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        prog="url-checker",
+        prog="urls-checker",
         description=(
             "Check health of URLs from a file with concurrency and retries."
         ),
