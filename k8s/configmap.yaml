@@ -5,6 +5,12 @@ metadata:
 data:
   urls.txt: |
     https://example.com
+
+    # This will fail because Microsoft doesn't like the default
+    # headers sent from aiohttp.  Additional headers would
+    # probably resolve this.
     https://microsoft.com/
     https://dsjkdjs-dsdsjds-dshjdhsjsd/foo
     http://www.google.com/this/doesnt/exist
+    https://google.com
+    https://news.ycombinator.com/health

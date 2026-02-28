@@ -7,6 +7,6 @@ RUN uv sync --frozen --no-dev --no-install-project
 FROM python:3.13-slim
 WORKDIR /app
 COPY --from=builder /app/.venv ./.venv
-COPY urls-checker.py .
+COPY urls_checker.py urls-checker.py
 ENV PATH="/app/.venv/bin:$PATH"
 ENTRYPOINT ["python", "urls-checker.py"]

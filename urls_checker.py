@@ -31,17 +31,17 @@ def comma_separated_status_codes(value: str) -> set[int]:
     result = set()
     for code in value.split(","):
         try:
-            code = int(code)
+            code_i = int(code)
         except ValueError:
             raise argparse.ArgumentTypeError(
                 f"Invalid status code: {code!r}. "
                 "Expected comma-separated integer HTTP status codes."
             )
-        if code not in valid_status_codes:
+        if code_i not in valid_status_codes:
             raise argparse.ArgumentTypeError(
-                f"{code} is not a valid HTTP status code."
+                f"{code_i} is not a valid HTTP status code."
             )
-        result.add(code)
+        result.add(code_i)
     return result
 
 
@@ -92,7 +92,7 @@ def format_result(url: str, ok: bool, status: str, retries: int) -> str:
 
 async def worker(
     session: aiohttp.ClientSession,
-    queue: asyncio.Queue,
+    queue: asyncio.Queue[str],
     timeout: float,
     max_retries: int,
     valid_status_codes: set[int],
@@ -139,7 +139,7 @@ async def worker(
                     format_result(
                         url,
                         ok=False,
-                        status=last_error,
+                        status=last_error or "unknown error",
                         retries=attempt - 1,
                     ),
                     flush=True,
@@ -149,7 +149,7 @@ async def worker(
 
 
 async def producer(
-    urls_file: typing.IO[str], queue: asyncio.Queue
+    urls_file: typing.IO[str], queue: asyncio.Queue[str]
 ) -> None:
     for line in urls_file:
         url = line.strip()
@@ -158,30 +158,28 @@ async def producer(
         await queue.put(url)
 
 
-async def main():
-    args = parse_args()
+async def run(
+    urls_file: typing.IO[str],
+    timeout: float,
+    retries: int,
+    valid_status_codes: set[int],
+    concurrency: int,
+) -> None:
+    queue: asyncio.Queue[str] = asyncio.Queue(maxsize=concurrency * 2)
 
-    # Create a queue of URLs that each worker will read from.
-    queue = asyncio.Queue(maxsize=args.concurrency * 2)
-
-    async with aiohttp.ClientSession(headers={"User-Agent": "Mozilla/5.0"}) as session:
-        # We split the URLs up among workers (which read from a queue)
-        # where each worker can run indepenent of the others.
+    async with aiohttp.ClientSession(
+        headers={"User-Agent": "Mozilla/5.0"}
+    ) as session:
         workers = [
-            # Use create task so these workers start immediately.
             asyncio.create_task(
                 worker(
-                    session,
-                    queue,
-                    args.timeout,
-                    args.retries,
-                    args.valid_status_codes,
+                    session, queue, timeout, retries, valid_status_codes
                 )
             )
-            for _ in range(args.concurrency)
+            for _ in range(concurrency)
         ]
 
-        await producer(args.urls_file, queue)
+        await producer(urls_file, queue)
         await queue.join()
 
         for w in workers:
@@ -192,6 +190,17 @@ async def main():
         # themselves, but this is a quick implementation for interview
         # purposes.
         await asyncio.gather(*workers, return_exceptions=True)
+
+
+async def main():
+    args = parse_args()
+    await run(
+        args.urls_file,
+        args.timeout,
+        args.retries,
+        args.valid_status_codes,
+        args.concurrency,
+    )
 
 
 if __name__ == "__main__":
