@@ -5,5 +5,6 @@ metadata:
 data:
   urls.txt: |
     https://example.com
-    https://badbadbad.com
-    https://blooomberg.com
+    https://microsoft.com/
+    https://dsjkdjs-dsdsjds-dshjdhsjsd/foo
+    http://www.google.com/this/doesnt/exist

@@ -15,6 +15,7 @@ spec:
             - name: urls
               mountPath: /urls.txt
               subPath: urls.txt
+          imagePullPolicy: Never
       volumes:
         - name: urls
           configMap:
