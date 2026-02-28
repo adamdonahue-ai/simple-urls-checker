@@ -1,7 +1,5 @@
 """
 Unit tests for urls-checker application.
-
-Generated from Claude and then fixed for correctness.
 """
 
 import argparse
