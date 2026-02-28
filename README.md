@@ -14,6 +14,8 @@ I grabbed a bunch of URLs into a file with a quick one-liner:
 
 You can then run via Docker easily enough using -v to mount the urls.  Some sample input follows (truncated).
 
+*NOTE: Some of the URLs return 4xx codes because the endpoints don't like that the aiohttp default headers aren't complete.*
+
 ```
 (simple-urls-checker) adamdonahue@Adams-MacBook-Air simple-urls-checker % docker build -t urls-checker:latest .
 (simple-urls-checker) adamdonahue@Adams-MacBook-Air simple-urls-checker % docker run -v /tmp:/foo urls-checker --urls-file /foo/urls

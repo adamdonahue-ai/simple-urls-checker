@@ -76,14 +76,6 @@ class TestFormatResult:
         assert "503" in result
         assert "retries=3" in result
 
-    def test_url_truncated_at_70_chars(self):
-        long_url = "https://" + "a" * 100 + ".com"
-        result = format_result(
-            long_url, ok=True, status="200", retries=0
-        )
-        assert long_url[:70] in result
-        assert long_url not in result
-
     def test_ok_field_is_padded(self):
         result = format_result(
             "https://example.com", ok=True, status="200", retries=0

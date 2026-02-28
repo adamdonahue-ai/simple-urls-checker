@@ -87,7 +87,7 @@ def parse_args():
 
 
 def format_result(url: str, ok: bool, status: str, retries: int) -> str:
-    return f"{'OK' if ok else 'ERROR':<5}  {url:.70}  [{status}]  retries={retries}"
+    return f"{'OK' if ok else 'ERROR':<5}  {url}  [{status}]  retries={retries}"
 
 
 async def worker(
