@@ -168,7 +168,10 @@ async def run(
     queue: asyncio.Queue[str] = asyncio.Queue(maxsize=concurrency * 2)
 
     async with aiohttp.ClientSession(
-        headers={"User-Agent": "Mozilla/5.0"}
+        headers={"User-Agent": "Mozilla/5.0"},
+        # Accommodate for larger headers.
+        max_line_size=16384,
+        max_field_size=16384,
     ) as session:
         workers = [
             asyncio.create_task(
