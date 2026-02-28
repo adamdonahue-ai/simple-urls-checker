@@ -107,7 +107,7 @@ async def worker(
 
             while attempt <= max_retries:
                 try:
-                    async with session.get(
+                    async with session.head(
                         url,
                         timeout=client_timeout,
                         allow_redirects=True,

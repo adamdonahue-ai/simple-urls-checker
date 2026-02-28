@@ -118,7 +118,7 @@ class TestProducer:
 class TestWorker:
     async def test_successful_request(self, capsys):
         with mock_aioresponses() as m:
-            m.get("https://example.com", status=200)
+            m.head("https://example.com", status=200)
             await run(
                 io.StringIO("https://example.com\n"),
                 timeout=5.0,
@@ -131,7 +131,7 @@ class TestWorker:
     async def test_failed_request_exhausts_retries(self, capsys):
         with mock_aioresponses() as m:
             for _ in range(4):
-                m.get("https://example.com", status=503)
+                m.head("https://example.com", status=503)
             await run(
                 io.StringIO("https://example.com\n"),
                 timeout=5.0,
@@ -146,7 +146,7 @@ class TestWorker:
     async def test_timeout_is_retried(self, capsys):
         with mock_aioresponses() as m:
             for _ in range(4):
-                m.get(
+                m.head(
                     "https://example.com",
                     exception=asyncio.TimeoutError(),
                 )
@@ -163,8 +163,8 @@ class TestWorker:
 
     async def test_retry_succeeds_on_second_attempt(self, capsys):
         with mock_aioresponses() as m:
-            m.get("https://example.com", status=503)
-            m.get("https://example.com", status=200)
+            m.head("https://example.com", status=503)
+            m.head("https://example.com", status=200)
             await run(
                 io.StringIO("https://example.com\n"),
                 timeout=5.0,
