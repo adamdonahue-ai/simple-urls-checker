@@ -162,7 +162,7 @@ async def main():
     # Create a queue of URLs that each worker will read from.
     queue = asyncio.Queue(maxsize=args.concurrency * 2)
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(headers={"User-Agent": "Mozilla/5.0"}) as session:
         # We split the URLs up among workers (which read from a queue)
         # where each worker can run indepenent of the others.
         workers = [
