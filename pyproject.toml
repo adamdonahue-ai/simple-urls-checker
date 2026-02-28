@@ -1,7 +1,7 @@
 [project]
-name = "url-checker"
+name = "simple-urls-checker"
 version = "0.1.0"
-description = "Add your description here"
+description = "A simple URL health checker."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -12,5 +12,6 @@ dependencies = [
 dev = [
     "black>=26.1.0",
     "mypy>=1.19.1",
+    "pytest>=9.0.2",
     "ruff>=0.15.4",
 ]
