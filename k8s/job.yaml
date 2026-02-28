@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: urls-checker
+spec:
+  template:
+    spec:
+      containers:
+        - name: urls-checker
+          image: urls-checker:latest
+          args:
+            - --urls-file
+            - /urls.txt
+          volumeMounts:
+            - name: urls
+              mountPath: /urls.txt
+              subPath: urls.txt
+      volumes:
+        - name: urls
+          configMap:
+            name: urls-configmap
+      restartPolicy: Never
