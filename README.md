@@ -86,3 +86,13 @@ OK     https://zoom.us  [200]  retries=0
 OK     https://forbes.com  [200]  retries=0
 <snip>
 ```
+
+# What About Alerting?
+
+Given the streamign nature here, one way to do alerting (rather
+than hard-coding it into the script, although that's certainly an option)
+would be to add a flag to enable (or perhaps make default) a CSV
+output mode, which could then be streamed into an alert handler,
+or probably more flexibly an SQS/SNS that an alert handler can
+read from/receive alerts from, decoupling these things.  I didn't
+do that here, but just spitballing.
